@@ -1,0 +1,34 @@
+---
+- name: "Make sure the odo download destination exists"
+  file:
+    path: "{{ dl_dest }}"
+    state: directory
+    mode: 0755
+
+- name: "Download odo CheckSums from {{ odo_base_url }}/sha256sum.txt"
+  get_url:
+    url: "{{ odo_base_url }}/sha256sum.txt"
+    dest: "{{ dl_dest }}"
+    validate_certs: true
+    mode: 0644
+
+- name: "Create odo checksum.csv from sha256sum.txt"
+  copy:
+    content: "{{ lookup('file', '{{ dl_dest }}/sha256sum.txt') | replace('  ',',') }}"
+    dest: "{{ dl_dest }}/checksum.csv"
+    mode: 0644
+
+- name: "Read {{ dl_dest }}/checksum.csv"
+  read_csv:
+    delimiter: ","
+    fieldnames:
+      - checksum
+      - tool
+    path: "{{ dl_dest }}/checksum.csv"
+  register: csums
+
+- name: "Processing platform"
+  include_tasks: download.yml
+  loop: "{{ odo_platform }}"
+  loop_control:
+    loop_var: platform_item

@@ -1,0 +1,29 @@
+---
+# defaults file for download_ocp4_tools
+ocp_version:
+  - 4.9.10
+ocp_tools:
+  - openshift-install
+  - openshift-client
+  - opm
+ocp_platform:
+  - windows
+  - linux
+  - mac
+get_helm: false
+helm_platform:
+  - darwin-amd64
+  - linux-amd64
+  - linux-arm64
+  - linux-ppc64le
+  - linux-s390x
+  - windows-amd64
+get_odo: false
+odo_platform:
+  - darwin-amd64
+  - linux-amd64
+  - linux-arm64
+  - linux-ppc64le
+  - linux-s390x
+  - windows-amd64
+download_location: ./

@@ -1,0 +1,42 @@
+---
+- name: "Setting download destination for version {{ version_item }}"
+  set_fact:
+    dl_dest: "{{ download_location }}ocp4-tools-{{ version_item }}"
+
+- name: "Make sure the destination directory exist"
+  file:
+    path: "{{ dl_dest }}"
+    state: directory
+    mode: 0755
+
+- name: "Download tools CheckSums from {{ base_url }}{{ version_item }}/sha256sum.txt"
+  get_url:
+    url: "{{ base_url }}{{ version_item }}/sha256sum.txt"
+    dest: "{{ dl_dest }}"
+    validate_certs: true
+    mode: 0644
+
+- name: "Create tools checksum.csv from sha256sum.txt"
+  copy:
+    content: "{{ lookup('file', '{{ dl_dest }}/sha256sum.txt') | replace('  ',',') }}"
+    dest: "{{ dl_dest }}/checksum.csv"
+    mode: 0644
+
+- name: "Read {{ dl_dest }}/checksum.csv"
+  read_csv:
+    delimiter: ","
+    fieldnames:
+      - checksum
+      - tool
+    path: "{{ dl_dest }}/checksum.csv"
+  register: csums
+
+- name: "Setting base download url to {{ base_url }}{{ version_item }}"
+  set_fact:
+    dl_url: "{{ base_url }}{{ version_item }}"
+
+- name: "Process Platform"
+  include_tasks: process_platform.yml
+  loop: "{{ ocp_platform }}"
+  loop_control:
+    loop_var: platform_item

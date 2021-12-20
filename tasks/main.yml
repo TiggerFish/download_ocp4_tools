@@ -1,0 +1,25 @@
+---
+# tasks file for download_ocp4_tools
+- name: "get ocp tools"
+  include_tasks: process_version.yml
+  loop: "{{ ocp_version }}"
+  loop_control:
+    loop_var: version_item
+
+- name: "get helm"
+  vars:
+    tools_item: helm
+    version_item: latest
+    dl_dest: "{{ download_location }}ocp4-tools-helm"
+    dl_url: "{{ helm_base_url }}"
+  include_tasks: process_helm.yml
+  when: get_helm
+
+- name: "get odo"
+  vars:
+    tools_item: odo
+    version_item: latest
+    dl_dest: "{{ download_location }}ocp4-tools-odo"
+    dl_url: "{{ odo_base_url }}"
+  include_tasks: process_odo.yml
+  when: get_odo

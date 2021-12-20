@@ -1,0 +1,9 @@
+---
+- name: "Downloading {{ tools_item }}-{{ platform_item }}-{{ version_item }} if required, please wait"
+  get_url:
+    url: "{{ dl_url }}/{{ item.tool }}"
+    checksum: "sha256:{{ item.checksum }}"
+    dest: "{{ dl_dest }}"
+    validate_certs: true
+  when: item.tool is search(tools_item) and item.tool is search (platform_item) and (item.tool is search (".tar.gz") or item.tool is search (".zip"))
+  loop: "{{ csums.list }}"

@@ -1,0 +1,7 @@
+---
+- name: "Process Downloads"
+  include_tasks: download.yml
+  loop: "{{ ocp_tools }}"
+  when: not (tools_item == 'openshift-install' and platform_item == 'windows')
+  loop_control:
+    loop_var: tools_item

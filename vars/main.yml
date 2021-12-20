@@ -1,0 +1,5 @@
+---
+# vars file for download_ocp4_tools
+base_url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/"
+helm_base_url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/helm/latest"
+odo_base_url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/odo/latest"
